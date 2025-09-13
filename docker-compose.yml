@@ -1,0 +1,11 @@
+services:
+  govee-smart-home:
+    build: .
+    container_name: govee-smart-home
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - ./src:/app/src
+      - ./package.json:/app/package.json
+      - ./package-lock.json:/app/package-lock.json
