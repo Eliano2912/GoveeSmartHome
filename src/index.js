@@ -43,6 +43,10 @@ client.on("message", async (msgTopic, message) => {
           await setLightPower(devices.Nachttisch.id, devices.Nachttisch.sku, "Nachttisch", true);
           await setLightPower(devices.Sofa.id, devices.Sofa.sku, "Sofa", true);
           await setLightPower(devices.TVLicht.id, devices.TVLicht.sku, "TvLicht", true);
+
+          await setLightBrightness(devices.Nachttisch.id, devices.Nachttisch.sku, "Nachttisch", 10);
+          await setLightBrightness(devices.Sofa.id, devices.Sofa.sku, "Sofa", 10);
+          await setLightBrightness(devices.TVLicht.id, devices.TVLicht.sku, "TvLicht", 10);
           
           setTimeout(async () => {
             await setLightPower(devices.Nachttisch.id, devices.Nachttisch.sku, "Nachttisch", false);
@@ -85,8 +89,7 @@ async function setLightPower(deviceId, sku, deviceName, on) {
   }
 }
 
-
-async function setLightColor(r, g, b) {
+async function setLightBrightness(deviceId, sku, deviceName, brightness) {
   try {
     const response = await fetch("https://developer-api.govee.com/v1/devices/control", {
       method: "PUT",
@@ -95,21 +98,49 @@ async function setLightColor(r, g, b) {
         "Govee-API-Key": API_KEY
       },
       body: JSON.stringify({
-        device: DEVICE_ID,
-        model: "H6008", 
+        device: deviceId,
+        model: sku,
         cmd: {
-          name: "color",
-          value:  { r, g, b }
+          name: "brightness",
+          value: brightness // 0 bis 100
         }
       })
     });
 
     const data = await response.json();
-    console.log(`Lichtfarbe gesetzt auf RGB(${r},${g},${b}):`, data); // <- hier angepasst
+    console.log(`${deviceName} Helligkeit auf ${brightness}% gesetzt:`, data);
   } catch (err) {
-    console.error("Fehler beim Steuern des Lichts:", err);
+    console.error(`Fehler beim Dimmen von ${deviceName}:`, err);
   }
 }
+
+
+
+async function setLightColor(deviceId, sku, deviceName, r, g, b) {
+  try {
+    const response = await fetch("https://developer-api.govee.com/v1/devices/control", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "Govee-API-Key": API_KEY
+      },
+      body: JSON.stringify({
+        device: deviceId,
+        model: sku,
+        cmd: {
+          name: "color",
+          value: { r, g, b }
+        }
+      })
+    });
+
+    const data = await response.json();
+    console.log(`${deviceName} Farbe gesetzt auf RGB(${r},${g},${b}):`, data);
+  } catch (err) {
+    console.error(`Fehler beim Steuern der Farbe von ${deviceName}:`, err);
+  }
+}
+
 
 async function getLightStatus(deviceId, sku, deviceName) {
   const requestBody = {
