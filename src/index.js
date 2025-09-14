@@ -40,13 +40,13 @@ client.on("message", async (msgTopic, message) => {
       try {
         const sleepMode = await proofSleepMode();
         if (sleepMode) {
-          await setLightPower(devices.Nachttisch.id, devices.Nachttisch.sku, "Nachttisch", true);
-          await setLightPower(devices.Sofa.id, devices.Sofa.sku, "Sofa", true);
-          await setLightPower(devices.TVLicht.id, devices.TVLicht.sku, "TvLicht", true);
+          await setLightBrightness(devices.Nachttisch.id, devices.Nachttisch.sku, "Nachttisch", 15);
+          await setLightBrightness(devices.Sofa.id, devices.Sofa.sku, "Sofa", 15);
+          await setLightBrightness(devices.TVLicht.id, devices.TVLicht.sku, "TvLicht", 15);
 
-          await setLightBrightness(devices.Nachttisch.id, devices.Nachttisch.sku, "Nachttisch", 10);
-          await setLightBrightness(devices.Sofa.id, devices.Sofa.sku, "Sofa", 10);
-          await setLightBrightness(devices.TVLicht.id, devices.TVLicht.sku, "TvLicht", 10);
+          await setLightColor(devices.Nachttisch.id, devices.Nachttisch.sku, "Nachttisch", 255, 111, 60);
+          await setLightColor(devices.Sofa.id, devices.Sofa.sku, "Sofa", 255, 111, 60);
+          await setLightColor(devices.TVLicht.id, devices.TVLicht.sku, "TvLicht", 255, 111, 60);
           
           setTimeout(async () => {
             await setLightPower(devices.Nachttisch.id, devices.Nachttisch.sku, "Nachttisch", false);
@@ -221,7 +221,7 @@ async function proofSleepMode() {
   try {
     const allLightsOn = await checkAllLights();
     const time = await getTime();
-    if (!allLightsOn && (time.hours >= 16 || time.hours < 7)) {
+    if (!allLightsOn && (time.hours >= 23 || time.hours < 7)) {
       return true;
     } else {return false;}
 } catch (err) {
