@@ -221,7 +221,7 @@ async function proofSleepMode() {
   try {
     const allLightsOn = await checkAllLights();
     const time = await getTime();
-    if (!allLightsOn && (time.hours >= 23 || time.hours < 7)) {
+    if (!allLightsOn && (time.hours >= 0 || time.hours < 7)) {
       return true;
     } else {return false;}
 } catch (err) {
